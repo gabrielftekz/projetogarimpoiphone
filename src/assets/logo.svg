@@ -1,0 +1,16 @@
+<svg width="280" height="80" viewBox="0 0 280 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@900&amp;display=swap');
+    </style>
+  </defs>
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+        font-family="'Space Grotesk', sans-serif"
+        font-weight="900"
+        font-style="italic"
+        font-size="72"
+        letter-spacing="-4"
+        fill="#5D6D3E">
+    TEKZ
+  </text>
+</svg>

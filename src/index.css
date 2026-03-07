@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  min-height: 100vh;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #FCF9F5;
+  color: #4A443F;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Quicksand', sans-serif;
+}
+
+button { cursor: pointer; }
+a { text-decoration: none; color: inherit; }
+
+input, button, select, textarea {
+  font-family: 'Nunito', sans-serif;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: #e8e0d8; border-radius: 4px; }
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.fade { animation: fadeUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+.card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 0 0 1px rgba(0,0,0,.03);
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,.09), 0 0 0 1px rgba(0,0,0,.04);
+}
+
+.nav-link {
+  transition: all 0.15s;
+  border-radius: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.nav-link:hover { color: #5D6D3E !important; }
+
+.action-card {
+  background: #fff;
+  border-radius: 24px;
+  border: 1px solid #F5F0EA;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.action-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,.1);
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: #5D6D3E;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 11px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Nunito', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-primary:hover { background: #4A5930; }
+
+.btn-ghost {
+  background: #F5F0EA;
+  color: #6B6560;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Nunito', sans-serif;
+}
+
+.btn-ghost:hover { background: #EDE8E0; }
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.row-hover:hover { background: #FAFAF8 !important; }
+
+input[type=range] { accent-color: #5D6D3E; }
+
+.seg-btn {
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Nunito', sans-serif;
+}
+
+.quick-chip {
+  background: #F5F0EA;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #7A7268;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Nunito', sans-serif;
+}
+
+.quick-chip:hover { background: #EDE8E0; color: #5D6D3E; }
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #5D6D3E !important;
+  box-shadow: 0 0 0 3px rgba(93,109,62,.12) !important;
+}
+
+.scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #e8e0d8; border-radius: 4px; }
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #B5AFA9;
+  display: inline-block;
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
