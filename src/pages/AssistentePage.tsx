@@ -7,7 +7,7 @@ import { formatCurrency } from '../lib/utils'
 import Icon from '../components/ui/Icon'
 import type { ChatMessage, Aparelho } from '../types'
 
-const WEBHOOK_URL = 'https://workflows.francoia.shop/webhook-test/whatsapp-mensagens'
+const WEBHOOK_URL = 'https://webhook.francoia.shop/webhook/whatsapp-mensagens'
 
 const QUICK_CHIPS = [
   'Qual o iPhone mais barato?',
