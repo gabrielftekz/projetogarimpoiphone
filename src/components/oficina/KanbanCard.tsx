@@ -9,18 +9,18 @@ const SUBSTATUS: Record<OSStatus, string> = {
   'Entregue': 'Entregue',
 }
 
-const SUBSTATUS_COLORS: Record<OSStatus, { bg: string; color: string }> = {
-  'Aguardando Peça': { bg: '#FEF2F2', color: '#DC2626' },
-  'Em Andamento': { bg: '#EBF5FB', color: '#0EA5E9' },
-  'Pronto': { bg: '#F0FDF4', color: '#16A34A' },
-  'Entregue': { bg: '#F8FAFC', color: '#9A948E' },
+const SUBSTATUS_COLORS: Record<OSStatus, { bg: string; color: string; border: string }> = {
+  'Aguardando Peça': { bg: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'rgba(239, 68, 68, 0.2)' },
+  'Em Andamento': { bg: 'rgba(14, 165, 233, 0.1)', color: '#0ea5e9', border: 'rgba(14, 165, 233, 0.2)' },
+  'Pronto': { bg: 'rgba(34, 197, 94, 0.1)', color: '#22c55e', border: 'rgba(34, 197, 94, 0.2)' },
+  'Entregue': { bg: 'rgba(161, 161, 170, 0.1)', color: '#a1a1aa', border: 'rgba(161, 161, 170, 0.2)' },
 }
 
 const BORDER_COLORS: Record<OSStatus, string> = {
-  'Aguardando Peça': '#DC2626',
-  'Em Andamento': '#0EA5E9',
-  'Pronto': '#16A34A',
-  'Entregue': '#9A948E',
+  'Aguardando Peça': '#ef4444',
+  'Em Andamento': '#0ea5e9',
+  'Pronto': '#22c55e',
+  'Entregue': '#a1a1aa',
 }
 
 interface KanbanCardProps {
@@ -32,93 +32,71 @@ interface KanbanCardProps {
 }
 
 export default function KanbanCard({ os, onEdit, onAdvance, onDragStart, onDelete }: KanbanCardProps) {
-  const sc = SUBSTATUS_COLORS[os.status] ?? { bg: '#F8FAFC', color: '#9A948E' }
-  const borderColor = BORDER_COLORS[os.status] ?? '#9A948E'
+  const sc = SUBSTATUS_COLORS[os.status] ?? { bg: 'rgba(161, 161, 170, 0.1)', color: '#a1a1aa', border: 'rgba(161, 161, 170, 0.2)' }
+  const borderColor = BORDER_COLORS[os.status] ?? '#a1a1aa'
 
   return (
     <div
       draggable
       onDragStart={(e) => onDragStart(e, os)}
+      className="bg-white/5 backdrop-blur-md rounded-2xl p-4 flex flex-col gap-3 cursor-grab relative overflow-hidden group border border-white/5 hover:border-white/20 transition-all duration-300"
       style={{
-        background: '#fff',
-        borderRadius: 14,
-        border: '1px solid #EDE8E0',
-        borderLeft: `4px solid ${borderColor}`,
-        padding: '14px 16px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 10,
-        boxShadow: '0 1px 6px rgba(0,0,0,0.05)',
-        transition: 'box-shadow 0.15s, opacity 0.15s',
-        cursor: 'grab',
+        borderLeft: `3px solid ${borderColor}`,
+        boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
       }}
-      onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 16px rgba(0,0,0,0.10)' }}
-      onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.boxShadow = '0 1px 6px rgba(0,0,0,0.05)' }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-        <span style={{
-          fontSize: 10, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase',
-          background: sc.bg, color: sc.color, borderRadius: 20, padding: '3px 9px',
-        }}>
+      <div
+        className="absolute top-0 right-0 w-24 h-24 rounded-full blur-[30px] opacity-10 pointer-events-none group-hover:opacity-30 transition-opacity duration-500"
+        style={{ background: borderColor }}
+      />
+
+      <div className="flex items-center justify-between gap-2 z-10">
+        <span
+          className="text-[9px] font-black tracking-widest uppercase border rounded-full px-2.5 py-1"
+          style={{ background: sc.bg, color: sc.color, borderColor: sc.border }}
+        >
           {SUBSTATUS[os.status]}
         </span>
-        <span style={{ fontSize: 12, fontWeight: 700, color: '#B5AFA9', whiteSpace: 'nowrap' }}>#{os.id}</span>
+        <span className="text-xs font-mono font-bold text-zinc-500">#{os.id.slice(0, 8)}</span>
       </div>
 
-      <div>
-        <p style={{ margin: 0, fontSize: 15, fontWeight: 700, color: '#4A443F', lineHeight: 1.3 }}>
-          {os.problema ? `${os.problema.slice(0, 40)}${os.problema.length > 40 ? '...' : ''}` : os.modelo}
+      <div className="z-10">
+        <p className="m-0 text-[15px] font-bold text-white leading-snug">
+          {os.problema ? `${os.problema.slice(0, 45)}${os.problema.length > 45 ? '...' : ''}` : os.modelo}
         </p>
-        <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9A948E' }}>{os.modelo}</p>
+        <p className="m-0 mt-1 text-xs text-zinc-400 font-medium">{os.modelo}</p>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <Icon name="person" size={14} style={{ color: '#B5AFA9', flexShrink: 0 }} />
-        <span style={{ fontSize: 13, color: '#6B6560' }}>
-          <span style={{ color: '#9A948E' }}>Cliente: </span>
-          <span style={{ fontWeight: 600, color: '#4A443F' }}>{os.cliente_nome}</span>
+      <div className="flex items-center gap-2 z-10 mt-1">
+        <Icon name="person" size={14} className="text-zinc-500" />
+        <span className="text-xs font-semibold text-zinc-300 truncate">
+          {os.cliente_nome}
         </span>
       </div>
 
       {os.valor && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <Icon name="payments" size={14} style={{ color: '#B5AFA9', flexShrink: 0 }} />
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#5D6D3E' }}>{formatCurrency(os.valor)}</span>
+        <div className="flex items-center gap-2 z-10">
+          <Icon name="payments" size={14} className="text-teal-500/70" />
+          <span className="text-sm font-bold text-teal-400">{formatCurrency(os.valor)}</span>
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 2 }}>
+      <div className="flex gap-2 mt-3 z-10">
         {os.status === 'Aguardando Peça' && (
           <button
             onClick={() => onAdvance(os.id, 'Em Andamento')}
-            style={{
-              flex: 1, border: '1px solid #DC2626', background: 'transparent', color: '#DC2626',
-              borderRadius: 10, padding: '7px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-              transition: 'background 0.15s, color 0.15s',
-            }}
-            onMouseEnter={(e) => { const b = e.currentTarget; b.style.background = '#DC2626'; b.style.color = '#fff' }}
-            onMouseLeave={(e) => { const b = e.currentTarget; b.style.background = 'transparent'; b.style.color = '#DC2626' }}
+            className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl border border-red-500/50 text-red-400 text-xs font-bold hover:bg-red-500 hover:text-white transition-colors"
           >
-            Iniciar Reparo
-            <Icon name="arrow_forward" size={14} style={{ color: 'inherit' }} />
+            Iniciar Reparo <Icon name="arrow_forward" size={14} />
           </button>
         )}
 
         {os.status === 'Em Andamento' && (
           <button
             onClick={() => onAdvance(os.id, 'Pronto')}
-            style={{
-              flex: 1, border: '1px solid #0EA5E9', background: 'transparent', color: '#0EA5E9',
-              borderRadius: 10, padding: '7px 0', fontSize: 13, fontWeight: 700, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-              transition: 'background 0.15s, color 0.15s',
-            }}
-            onMouseEnter={(e) => { const b = e.currentTarget; b.style.background = '#0EA5E9'; b.style.color = '#fff' }}
-            onMouseLeave={(e) => { const b = e.currentTarget; b.style.background = 'transparent'; b.style.color = '#0EA5E9' }}
+            className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl border border-sky-500/50 text-sky-400 text-xs font-bold hover:bg-sky-500 hover:text-white transition-colors"
           >
-            Marcar como Pronto
-            <Icon name="check" size={14} style={{ color: 'inherit' }} />
+            Marcar Pronto <Icon name="check" size={14} />
           </button>
         )}
 
@@ -127,60 +105,37 @@ export default function KanbanCard({ os, onEdit, onAdvance, onDragStart, onDelet
             href={`https://wa.me/55${os.cliente_tel.replace(/\D/g, '')}`}
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              flex: 1, background: '#25D366', color: '#fff',
-              borderRadius: 10, padding: '7px 0', fontSize: 13, fontWeight: 700,
-              textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-            }}
+            className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-bold hover:bg-emerald-500 hover:text-white transition-colors"
           >
-            <Icon name="phone" size={14} style={{ color: '#fff' }} />
-            Avisar no WhatsApp
+            <Icon name="chat" size={14} /> Avisar
           </a>
         )}
 
         {os.status === 'Pronto' && (
           <button
             onClick={() => onAdvance(os.id, 'Entregue')}
-            style={{
-              flex: os.cliente_tel ? 0 : 1, border: '1px solid #16A34A', background: 'transparent', color: '#16A34A',
-              borderRadius: 10, padding: '7px 10px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-              transition: 'background 0.15s, color 0.15s',
-            }}
-            onMouseEnter={(e) => { const b = e.currentTarget; b.style.background = '#16A34A'; b.style.color = '#fff' }}
-            onMouseLeave={(e) => { const b = e.currentTarget; b.style.background = 'transparent'; b.style.color = '#16A34A' }}
+            className="flex items-center justify-center py-1.5 px-3 rounded-xl border border-emerald-500/50 text-emerald-400 text-xs font-bold hover:bg-emerald-500 hover:text-white transition-colors"
           >
-            {!os.cliente_tel && 'Marcar Entregue'}
-            <Icon name="check_circle" size={14} style={{ color: 'inherit' }} />
+            <Icon name="check_circle" size={16} />
           </button>
         )}
 
         <button
           onClick={() => onEdit(os)}
-          style={{
-            border: '1px solid #EDE8E0', background: 'transparent', color: '#9A948E',
-            borderRadius: 10, padding: '7px 10px', fontSize: 13, fontWeight: 600, cursor: 'pointer',
-            transition: 'border-color 0.15s, color 0.15s',
-          }}
-          onMouseEnter={(e) => { const b = e.currentTarget; b.style.borderColor = '#5D6D3E'; b.style.color = '#5D6D3E' }}
-          onMouseLeave={(e) => { const b = e.currentTarget; b.style.borderColor = '#EDE8E0'; b.style.color = '#9A948E' }}
+          className="flex items-center justify-center w-8 rounded-xl bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white transition-colors"
+          title="Editar"
         >
-          <Icon name="edit" size={14} style={{ color: 'inherit' }} />
+          <Icon name="edit" size={14} />
         </button>
 
         <button
           onClick={() => {
             if (window.confirm('Tem certeza que deseja excluir esta OS?')) onDelete(os.id)
           }}
-          style={{
-            border: '1px solid #EDE8E0', background: 'transparent', color: '#9A948E',
-            borderRadius: 10, padding: '7px 10px', fontSize: 13, fontWeight: 600, cursor: 'pointer',
-            transition: 'border-color 0.15s, color 0.15s',
-          }}
-          onMouseEnter={(e) => { const b = e.currentTarget; b.style.borderColor = '#DC2626'; b.style.color = '#DC2626' }}
-          onMouseLeave={(e) => { const b = e.currentTarget; b.style.borderColor = '#EDE8E0'; b.style.color = '#9A948E' }}
+          className="flex items-center justify-center w-8 rounded-xl bg-white/5 text-zinc-400 hover:bg-red-500/20 hover:text-red-400 transition-colors"
+          title="Excluir"
         >
-          <Icon name="delete" size={14} style={{ color: 'inherit' }} />
+          <Icon name="delete" size={14} />
         </button>
       </div>
     </div>

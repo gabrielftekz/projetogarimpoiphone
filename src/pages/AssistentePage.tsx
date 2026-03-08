@@ -31,7 +31,7 @@ export default function AssistentePage() {
     {
       id: '0',
       role: 'assistant',
-      content: 'Olá! Sou o assistente TEKZ. Posso buscar aparelhos no estoque, garimpar preços em grupos do WhatsApp, calcular parcelas e avaliar usados. Como posso ajudar?',
+      content: 'Olá! Sou o TEKZ IA. Acesso em tempo real o estoque, calculo margens, pesquiso fornecedores (WPP) e ajudo a fechar vendas. O que precisa?',
       timestamp: new Date(),
     },
   ])
@@ -103,7 +103,7 @@ export default function AssistentePage() {
       setMessages((prev) =>
         prev.map((m) =>
           m.id === loadingId
-            ? { ...m, content: 'Não foi possível conectar ao assistente no momento. Tente novamente.', timestamp: new Date() }
+            ? { ...m, content: 'Falha na conexão neural. Tente novamente em instantes.', timestamp: new Date() }
             : m
         )
       )
@@ -119,50 +119,47 @@ export default function AssistentePage() {
   }
 
   return (
-    <div style={{ display: 'flex', gap: 20, height: 'calc(100vh - 64px - 64px - 64px)', minHeight: 520 }}>
-      <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: 0, overflow: 'hidden' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '16px 20px', borderBottom: '1px solid #F0EBE3' }}>
-          <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#EEF3E5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Icon name="smart_toy" size={20} style={{ color: '#5D6D3E' }} />
+    <div className="fade flex flex-col lg:flex-row gap-6 h-[calc(100vh-100px)] min-h-[600px]">
+
+      {/* Main Chat Area */}
+      <div className="glass-panel flex-1 flex flex-col p-0 overflow-hidden border-white/5 relative">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/10 rounded-full blur-[80px] pointer-events-none" />
+
+        <div className="flex items-center gap-4 px-6 py-5 border-b border-white/5 bg-white/[0.01] z-10 shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(20,184,166,0.15)]">
+            <Icon name="smart_toy" size={24} className="text-teal-400" />
           </div>
           <div>
-            <p style={{ fontWeight: 700, fontSize: 14, color: '#4A443F', margin: 0 }}>Assistente IA</p>
-            <p style={{ fontSize: 12, color: '#16A34A', margin: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22C55E', display: 'inline-block' }} />
-              Online
-            </p>
+            <h2 className="text-lg font-black text-white tracking-tight">TEKZ Intelligence</h2>
+            <div className="flex items-center gap-2 mt-0.5">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-teal-500"></span>
+              </span>
+              <span className="text-xs text-teal-400 font-bold uppercase tracking-widest">Neural Net Online</span>
+            </div>
           </div>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 z-10">
           {messages.map((msg) => (
-            <div key={msg.id} style={{ display: 'flex', gap: 10, flexDirection: msg.role === 'user' ? 'row-reverse' : 'row' }}>
-              <div style={{
-                width: 30, height: 30, borderRadius: '50%', flexShrink: 0, marginTop: 4,
-                background: msg.role === 'user' ? '#5D6D3E' : '#EEF3E5',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                <Icon name={msg.role === 'user' ? 'person' : 'smart_toy'} size={14} style={{ color: msg.role === 'user' ? '#fff' : '#5D6D3E' }} />
+            <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} items-end animate-fade-in`}>
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-lg ${msg.role === 'user' ? 'bg-indigo-500 text-white' : 'bg-white/5 border border-white/10 text-teal-400'
+                }`}>
+                <Icon name={msg.role === 'user' ? 'person' : 'smart_toy'} size={20} />
               </div>
-              <div style={{
-                maxWidth: '75%',
-                padding: '10px 14px',
-                borderRadius: msg.role === 'user' ? '18px 18px 4px 18px' : '4px 18px 18px 18px',
-                background: msg.role === 'user' ? '#5D6D3E' : '#fff',
-                color: msg.role === 'user' ? '#fff' : '#4A443F',
-                border: msg.role === 'assistant' ? '1px solid #F0EBE3' : 'none',
-                fontSize: 14,
-                lineHeight: 1.5,
-                boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-              }}>
+              <div className={`max-w-[80%] p-4 text-sm leading-relaxed shadow-lg ${msg.role === 'user'
+                  ? 'bg-indigo-500/20 border border-indigo-500/30 text-white rounded-2xl rounded-br-sm'
+                  : 'bg-white/5 border border-white/10 text-zinc-300 rounded-2xl rounded-bl-sm backdrop-blur-md'
+                }`}>
                 {msg.content === '...' ? (
-                  <span style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-                    <span className="pulse-dot" style={{ animationDelay: '0ms' }} />
-                    <span className="pulse-dot" style={{ animationDelay: '200ms' }} />
-                    <span className="pulse-dot" style={{ animationDelay: '400ms' }} />
-                  </span>
+                  <div className="flex gap-1.5 items-center px-2 py-1">
+                    <div className="w-2 h-2 rounded-full bg-teal-400/50 animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-2 h-2 rounded-full bg-teal-400/70 animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-2 h-2 rounded-full bg-teal-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
                 ) : (
-                  <p dangerouslySetInnerHTML={{ __html: formatMarkdown(msg.content) }} style={{ margin: 0 }} />
+                  <p dangerouslySetInnerHTML={{ __html: formatMarkdown(msg.content) }} className="m-0 font-sans" />
                 )}
               </div>
             </div>
@@ -170,77 +167,61 @@ export default function AssistentePage() {
           <div ref={bottomRef} />
         </div>
 
-        <div style={{ borderTop: '1px solid #F0EBE3', padding: '12px 20px' }}>
-          <div style={{ display: 'flex', gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
+        <div className="p-4 sm:p-6 border-t border-white/5 bg-white/[0.02] z-10 shrink-0">
+          <div className="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-none">
             {QUICK_CHIPS.map((chip) => (
               <button
                 key={chip}
                 onClick={() => sendMessage(chip)}
                 disabled={sending}
-                className="quick-chip"
+                className="whitespace-nowrap px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs text-zinc-300 font-bold hover:bg-white/10 hover:text-white hover:border-white/20 transition-all focus:outline-none"
               >
                 {chip}
               </button>
             ))}
           </div>
-          <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 8 }}>
+          <form onSubmit={handleSubmit} className="flex gap-3">
             <input
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Pergunte algo ao assistente..."
+              placeholder="Digite um comando para o assistente..."
               disabled={sending}
-              style={{
-                flex: 1,
-                border: '1px solid #EDE8E0',
-                borderRadius: 12,
-                padding: '10px 16px',
-                fontSize: 14,
-                color: '#4A443F',
-                outline: 'none',
-                background: '#FAF7F2',
-                fontFamily: 'Nunito, sans-serif',
-              }}
+              className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 transition-all font-sans placeholder-zinc-500 disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={!input.trim() || sending}
-              className="btn-primary"
-              style={{ padding: '10px 16px', borderRadius: 12, opacity: !input.trim() || sending ? 0.5 : 1 }}
+              className="btn-primary px-5 disabled:opacity-50 disabled:cursor-not-allowed group"
             >
-              <Icon name="send" size={18} />
+              <Icon name="send" size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
         </div>
       </div>
 
-      <div style={{ width: 260, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <div className="card" style={{ padding: 0 }}>
-          <div style={{ padding: '14px 16px', borderBottom: '1px solid #F0EBE3', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Icon name="inventory_2" size={16} style={{ color: '#5D6D3E' }} />
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#4A443F' }}>Estoque Rápido</span>
+      {/* Right Sidebar Area */}
+      <div className="w-full lg:w-72 flex flex-col gap-6 shrink-0 z-10">
+
+        <div className="glass-panel p-0 border-white/5 overflow-hidden">
+          <div className="flex items-center gap-3 p-4 border-b border-white/5 bg-white/[0.02]">
+            <Icon name="bolt" size={18} className="text-amber-400" />
+            <span className="text-sm font-bold text-white uppercase tracking-widest">Estoque Rápido</span>
           </div>
-          <div style={{ padding: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div className="p-4 flex flex-col gap-3">
             {recentAparelhos.length === 0 ? (
-              <p style={{ color: '#B5AFA9', fontSize: 13, textAlign: 'center', padding: '12px 0', margin: 0 }}>
-                Nenhum disponível
-              </p>
+              <p className="text-zinc-500 text-xs text-center py-4 font-bold">Nenhum disponível</p>
             ) : (
               recentAparelhos.map((ap) => (
-                <div key={ap.id} style={{ padding: 10, borderRadius: 12, background: '#FAF7F2', border: '1px solid #F0EBE3' }}>
-                  <p style={{ fontWeight: 700, fontSize: 13, color: '#4A443F', margin: '0 0 2px' }}>
-                    {ap.modelo} {ap.storage}
-                  </p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: 12, color: '#9A948E' }}>{ap.cor}</span>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: '#5D6D3E' }}>
-                      {formatCurrency(ap.preco_venda)}
-                    </span>
+                <div key={ap.id} className="p-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
+                  <p className="font-bold text-sm text-white mb-1">{ap.modelo} {ap.storage}</p>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-zinc-400">{ap.cor}</span>
+                    <span className="font-bold text-teal-400">{formatCurrency(ap.preco_venda)}</span>
                   </div>
                   {ap.bateria_pct < 80 && (
-                    <span style={{ fontSize: 11, color: '#D97706', display: 'flex', alignItems: 'center', gap: 3, marginTop: 2 }}>
-                      <Icon name="battery_alert" size={12} style={{ color: '#D97706' }} />
-                      {ap.bateria_pct}%
+                    <span className="text-[10px] text-amber-500 flex items-center gap-1.5 mt-2 font-bold uppercase tracking-widest">
+                      <Icon name="battery_alert" size={12} /> Bateria: {ap.bateria_pct}%
                     </span>
                   )}
                 </div>
@@ -249,27 +230,31 @@ export default function AssistentePage() {
           </div>
         </div>
 
-        <div className="card">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <Icon name="calculate" size={16} style={{ color: '#5D6D3E' }} />
-            <span style={{ fontSize: 13, fontWeight: 700, color: '#4A443F' }}>Descontos p/ Usado</span>
+        <div className="glass-panel p-5 border-white/5">
+          <div className="flex items-center gap-3 mb-4">
+            <Icon name="price_change" size={18} className="text-indigo-400" />
+            <span className="text-sm font-bold text-white uppercase tracking-widest">Avaliação Média</span>
           </div>
-          {[
-            { condicao: 'Tela trocada', desconto: 25 },
-            { condicao: 'Bateria abaixo de 80%', desconto: 15 },
-            { condicao: 'Detalhes de uso visíveis', desconto: 10 },
-            { condicao: 'Peça interna substituída', desconto: 20 },
-          ].map((d) => (
-            <div key={d.condicao} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-              <span style={{ fontSize: 12, color: '#9A948E' }}>{d.condicao}</span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#DC2626' }}>–{d.desconto}%</span>
-            </div>
-          ))}
-          <a href="/calculadora" style={{ display: 'block', marginTop: 8, textAlign: 'center', fontSize: 12, color: '#5D6D3E', fontWeight: 700, textDecoration: 'none' }}>
+          <div className="flex flex-col gap-3">
+            {[
+              { condicao: 'Tela trocada', desconto: 25 },
+              { condicao: 'Bateria < 80%', desconto: 15 },
+              { condicao: 'Marcas de Uso', desconto: 10 },
+              { condicao: 'Peça Paralela', desconto: 20 },
+            ].map((d) => (
+              <div key={d.condicao} className="flex justify-between items-center text-xs border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                <span className="text-zinc-400 font-medium">{d.condicao}</span>
+                <span className="font-bold text-red-400">-{d.desconto}%</span>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => navigate('/calculadora')} className="w-full mt-4 py-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold hover:bg-indigo-500 hover:text-white transition-all text-center">
             Abrir Calculadora →
-          </a>
+          </button>
         </div>
+
       </div>
+
     </div>
   )
 }

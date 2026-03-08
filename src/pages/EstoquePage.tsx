@@ -34,18 +34,7 @@ const EMPTY_FORM: FormData = {
   status: 'Disponível',
 }
 
-const inputStyle = {
-  border: '1px solid #EDE8E0',
-  borderRadius: 10,
-  padding: '9px 12px',
-  fontSize: 14,
-  outline: 'none',
-  fontFamily: 'Nunito, sans-serif',
-  color: '#4A443F',
-  width: '100%',
-  background: '#fff',
-  boxSizing: 'border-box' as const,
-}
+const inputClassName = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400/50 transition-all font-sans placeholder-zinc-500"
 
 export default function EstoquePage() {
   const { isAdmin } = useAuth()
@@ -137,128 +126,133 @@ export default function EstoquePage() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div className="fade flex flex-col gap-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 style={{ margin: 0, fontSize: 26, fontWeight: 800, color: '#4A443F' }}>Estoque</h1>
-          <p style={{ margin: '4px 0 0', color: '#9A948E', fontSize: 14 }}>Gerencie seus aparelhos em estoque</p>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">Estoque</h1>
+          <p className="text-zinc-400 mt-1 text-sm">Gerencie seus aparelhos em estoque com visão estratégica.</p>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div className="flex flex-wrap gap-3">
           {isAdmin && (
-            <button onClick={exportCsv} className="btn-ghost" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Icon name="download" size={16} /> Exportar
+            <button onClick={exportCsv} className="btn-ghost" title="Exportar CSV">
+              <Icon name="download" size={18} /> <span className="hidden sm:inline">Exportar</span>
             </button>
           )}
           {isAdmin && (
-            <button onClick={() => { setForm(EMPTY_FORM); setModalOpen(true) }} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Icon name="add" size={18} /> Novo Aparelho
+            <button onClick={() => { setForm(EMPTY_FORM); setModalOpen(true) }} className="btn-primary">
+              <Icon name="add" size={20} /> <span className="hidden sm:inline">Novo Aparelho</span>
             </button>
           )}
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: isAdmin ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)', gap: 16 }}>
-        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 14, background: '#EEF3E5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Icon name="smartphone" size={22} style={{ color: '#5D6D3E' }} />
+      {/* KPI Cards */}
+      <div className={`grid grid-cols-1 gap-4 ${isAdmin ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
+        <div className="glass-panel p-6 flex items-center gap-5 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/20 rounded-full blur-2xl group-hover:bg-teal-500/30 transition-all pointer-events-none" />
+          <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center shrink-0">
+            <Icon name="smartphone" size={24} className="text-teal-400" />
           </div>
           <div>
-            <p style={{ margin: 0, fontSize: 12, color: '#9A948E', fontWeight: 600 }}>Disponíveis</p>
-            <p style={{ margin: 0, fontSize: 24, fontWeight: 800, color: '#5D6D3E' }}>{kpis.disponiveis}</p>
+            <p className="text-[11px] font-bold text-teal-400/80 uppercase tracking-widest mb-1">Disponíveis</p>
+            <p className="text-3xl font-black text-white tracking-tight">{kpis.disponiveis}</p>
           </div>
         </div>
-        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 14, background: '#EBF5FB', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Icon name="payments" size={22} style={{ color: '#0EA5E9' }} />
+        <div className="glass-panel p-6 flex items-center gap-5 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl group-hover:bg-blue-500/30 transition-all pointer-events-none" />
+          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
+            <Icon name="payments" size={24} className="text-blue-400" />
           </div>
           <div>
-            <p style={{ margin: 0, fontSize: 12, color: '#9A948E', fontWeight: 600 }}>Valor em Estoque</p>
-            <p style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#4A443F' }}>{formatCurrency(kpis.totalEstoque)}</p>
+            <p className="text-[11px] font-bold text-blue-400/80 uppercase tracking-widest mb-1">Valor em Estoque</p>
+            <p className="text-2xl font-black text-white tracking-tight">{formatCurrency(kpis.totalEstoque)}</p>
           </div>
         </div>
         {isAdmin && (
-          <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 14, background: '#FFF7ED', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Icon name="receipt_long" size={22} style={{ color: '#D97706' }} />
+          <div className="glass-panel p-6 flex items-center gap-5 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/20 rounded-full blur-2xl group-hover:bg-orange-500/30 transition-all pointer-events-none" />
+            <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center shrink-0">
+              <Icon name="receipt_long" size={24} className="text-orange-400" />
             </div>
             <div>
-              <p style={{ margin: 0, fontSize: 12, color: '#9A948E', fontWeight: 600 }}>Custo Total</p>
-              <p style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#4A443F' }}>{formatCurrency(kpis.custoTotal)}</p>
+              <p className="text-[11px] font-bold text-orange-400/80 uppercase tracking-widest mb-1">Custo Total</p>
+              <p className="text-2xl font-black text-white tracking-tight">{formatCurrency(kpis.custoTotal)}</p>
             </div>
           </div>
         )}
       </div>
 
-      <div className="card" style={{ padding: 0 }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12, padding: '16px 20px', borderBottom: '1px solid #F0EBE3' }}>
-          <div style={{ display: 'flex', gap: 4 }}>
-            {STATUS_FILTERS.map((s) => (
-              <button
-                key={s}
-                onClick={() => { setStatusFilter(s); setPage(1) }}
-                className="seg-btn"
-                style={{
-                  background: statusFilter === s ? '#5D6D3E' : 'transparent',
-                  color: statusFilter === s ? '#fff' : '#9A948E',
-                  fontWeight: statusFilter === s ? 700 : 600,
-                }}
-              >
-                {s}
-              </button>
-            ))}
+      {/* Main Table Container */}
+      <div className="glass-panel overflow-hidden border-white/10">
+        <div className="flex flex-col xl:flex-row items-center justify-between gap-4 p-5 md:p-6 border-b border-white/5 bg-white/[0.01]">
+          <div className="flex flex-wrap gap-2 w-full xl:w-auto">
+            {STATUS_FILTERS.map((s) => {
+              const isActive = statusFilter === s
+              return (
+                <button
+                  key={s}
+                  onClick={() => { setStatusFilter(s); setPage(1) }}
+                  className={`px-4 py-2 text-[13px] font-bold rounded-lg transition-all border ${isActive
+                      ? 'bg-white/10 text-white border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.05)]'
+                      : 'bg-transparent text-zinc-500 border-transparent hover:bg-white/5 hover:text-zinc-300'
+                    }`}
+                >
+                  {s}
+                </button>
+              )
+            })}
           </div>
-          <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: 8, flex: 1, minWidth: 200 }}>
-            <div style={{ position: 'relative', flex: 1 }}>
-              <Icon name="search" size={16} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: '#B5AFA9' }} />
+          <form onSubmit={handleSearchSubmit} className="flex gap-3 w-full xl:w-80">
+            <div className="relative flex-1">
+              <Icon name="search" size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
               <input
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder="Buscar modelo ou IMEI..."
-                style={{ ...inputStyle, paddingLeft: 32 }}
+                className={`${inputClassName} pl-11 py-2`}
               />
             </div>
-            <button type="submit" className="btn-primary" style={{ padding: '9px 16px' }}>Buscar</button>
           </form>
         </div>
 
         {loading ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 160 }}>
-            <div style={{ width: 28, height: 28, border: '3px solid #EEF3E5', borderTopColor: '#5D6D3E', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+          <div className="flex items-center justify-center h-48">
+            <div className="w-8 h-8 border-4 border-white/10 border-t-teal-400 rounded-full animate-spin" />
           </div>
         ) : aparelhos.length === 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 160, gap: 8, color: '#B5AFA9' }}>
-            <Icon name="inventory_2" size={36} style={{ color: '#D6D0C8' }} />
-            <span style={{ fontSize: 14 }}>Nenhum aparelho encontrado</span>
+          <div className="flex flex-col items-center justify-center h-48 gap-3 text-zinc-500">
+            <Icon name="inventory_2" size={48} className="text-white/10" />
+            <span className="text-sm font-medium">Nenhum aparelho encontrado</span>
           </div>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse whitespace-nowrap">
               <thead>
-                <tr style={{ background: '#FAF7F2' }}>
+                <tr className="bg-white/[0.02]">
                   {['Modelo', 'Storage', 'Cor', 'IMEI', 'Bateria', ...(isAdmin ? ['Compra'] : []), 'Venda', 'Status', 'Entrada'].map((h) => (
-                    <th key={h} style={{ textAlign: 'left', padding: '10px 16px', borderBottom: '1px solid #F0EBE3', fontSize: 11, fontWeight: 700, color: '#9A948E', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+                    <th key={h} className="p-4 text-[10px] font-black text-zinc-500 uppercase tracking-[0.15em] border-b border-white/5">
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-white/5">
                 {aparelhos.map((ap) => (
-                  <tr key={ap.id} className="row-hover">
-                    <td style={{ padding: '11px 16px', fontWeight: 700, color: '#4A443F' }}>{ap.modelo}</td>
-                    <td style={{ padding: '11px 16px', color: '#9A948E' }}>{ap.storage}</td>
-                    <td style={{ padding: '11px 16px', color: '#9A948E' }}>{ap.cor}</td>
-                    <td style={{ padding: '11px 16px', fontFamily: 'monospace', fontSize: 12, color: '#9A948E' }}>{ap.imei}</td>
-                    <td style={{ padding: '11px 16px' }}>
-                      <span style={{ fontWeight: 700, color: ap.bateria_pct < 70 ? '#DC2626' : ap.bateria_pct < 80 ? '#D97706' : '#16A34A', display: 'flex', alignItems: 'center', gap: 3 }}>
-                        {ap.bateria_pct < 80 && <Icon name="battery_alert" size={13} style={{ color: ap.bateria_pct < 70 ? '#DC2626' : '#D97706' }} />}
+                  <tr key={ap.id} className="hover:bg-white/[0.02] transition-colors group cursor-default">
+                    <td className="p-4 font-bold text-white group-hover:text-teal-400 transition-colors">{ap.modelo}</td>
+                    <td className="p-4 text-zinc-400 text-sm">{ap.storage}</td>
+                    <td className="p-4 text-zinc-400 text-sm">{ap.cor}</td>
+                    <td className="p-4 font-mono text-xs text-zinc-500 tracking-wider">{ap.imei}</td>
+                    <td className="p-4">
+                      <div className={`flex items-center gap-1.5 font-bold text-sm ${ap.bateria_pct < 70 ? 'text-red-400' : ap.bateria_pct < 80 ? 'text-orange-400' : 'text-emerald-400'}`}>
+                        {ap.bateria_pct < 80 && <Icon name="battery_alert" size={14} />}
                         {ap.bateria_pct}%
-                      </span>
+                      </div>
                     </td>
-                    {isAdmin && <td style={{ padding: '11px 16px', color: '#9A948E' }}>{formatCurrency(ap.preco_compra)}</td>}
-                    <td style={{ padding: '11px 16px', fontWeight: 700, color: '#4A443F' }}>{formatCurrency(ap.preco_venda)}</td>
-                    <td style={{ padding: '11px 16px' }}><Badge status={ap.status} /></td>
-                    <td style={{ padding: '11px 16px', color: '#9A948E', whiteSpace: 'nowrap' }}>{formatDate(ap.data_entrada)}</td>
+                    {isAdmin && <td className="p-4 text-zinc-400 text-sm tracking-wide">{formatCurrency(ap.preco_compra)}</td>}
+                    <td className="p-4 font-bold text-white tracking-wide">{formatCurrency(ap.preco_venda)}</td>
+                    <td className="p-4"><Badge status={ap.status} /></td>
+                    <td className="p-4 text-zinc-500 text-xs">{formatDate(ap.data_entrada)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -266,62 +260,65 @@ export default function EstoquePage() {
           </div>
         )}
 
-        <div style={{ padding: '12px 20px' }}>
+        <div className="p-4 border-t border-white/5 bg-white/[0.01]">
           <Pagination page={page} total={total} pageSize={PAGE_SIZE} onPage={setPage} />
         </div>
       </div>
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Novo Aparelho">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <div style={{ gridColumn: '1 / -1' }}>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#9A948E', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>Modelo *</label>
-              <input value={form.modelo} onChange={(e) => setForm({ ...form, modelo: e.target.value })} placeholder="Ex: iPhone 15 Pro Max" style={inputStyle} />
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Novo Aparelho na Base">
+        <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 z-10">
+            <div className="sm:col-span-2">
+              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Modelo *</label>
+              <input value={form.modelo} onChange={(e) => setForm({ ...form, modelo: e.target.value })} placeholder="Ex: iPhone 15 Pro Max" className={inputClassName} />
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#9A948E', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>Armazenamento</label>
-              <select value={form.storage} onChange={(e) => setForm({ ...form, storage: e.target.value })} style={inputStyle}>
+              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Armazenamento</label>
+              <select value={form.storage} onChange={(e) => setForm({ ...form, storage: e.target.value })} className={inputClassName}>
                 {STORAGE_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#9A948E', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>Cor *</label>
-              <input value={form.cor} onChange={(e) => setForm({ ...form, cor: e.target.value })} placeholder="Ex: Titânio Preto" style={inputStyle} />
+              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Cor *</label>
+              <input value={form.cor} onChange={(e) => setForm({ ...form, cor: e.target.value })} placeholder="Ex: Titânio Preto" className={inputClassName} />
             </div>
-            <div style={{ gridColumn: '1 / -1' }}>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#9A948E', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>IMEI * (15 dígitos)</label>
-              <input value={form.imei} onChange={(e) => setForm({ ...form, imei: e.target.value.replace(/\D/g, '').slice(0, 15) })} placeholder="000000000000000\" style={{ ...inputStyle, fontFamily: 'monospace' }} />
-            </div>
-            <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#9A948E', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>Bateria %</label>
-              <input type="number" min={0} max={100} value={form.bateria_pct} onChange={(e) => setForm({ ...form, bateria_pct: Math.min(100, Math.max(0, Number(e.target.value))) })} style={inputStyle} />
+            <div className="sm:col-span-2">
+              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">IMEI * <span className="text-zinc-500 lowercase font-normal">(15 dígitos)</span></label>
+              <input value={form.imei} onChange={(e) => setForm({ ...form, imei: e.target.value.replace(/\D/g, '').slice(0, 15) })} placeholder="000000000000000" className={`${inputClassName} font-mono tracking-widest text-lg`} />
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#9A948E', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>Status</label>
-              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as AparelhoStatus })} style={inputStyle}>
-                <option>Disponível</option><option>Reservado</option><option>Vendido</option><option>Na Oficina</option>
+              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Bateria %</label>
+              <input type="number" min={0} max={100} value={form.bateria_pct} onChange={(e) => setForm({ ...form, bateria_pct: Math.min(100, Math.max(0, Number(e.target.value))) })} className={inputClassName} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Status Inicial</label>
+              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as AparelhoStatus })} className={inputClassName}>
+                <option value="Disponível">Disponível</option>
+                <option value="Reservado">Reservado</option>
+                <option value="Vendido">Vendido</option>
+                <option value="Na Oficina">Na Oficina</option>
               </select>
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#9A948E', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>Preço de Compra (R$)</label>
-              <input type="number" min={0} step={0.01} value={form.preco_compra} onChange={(e) => setForm({ ...form, preco_compra: Number(e.target.value) })} style={inputStyle} />
+              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Preço Compra (R$)</label>
+              <input type="number" min={0} step={0.01} value={form.preco_compra} onChange={(e) => setForm({ ...form, preco_compra: Number(e.target.value) })} className={inputClassName} />
             </div>
             <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: '#9A948E', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>Preço de Venda (R$)</label>
-              <input type="number" min={0} step={0.01} value={form.preco_venda} onChange={(e) => setForm({ ...form, preco_venda: Number(e.target.value) })} style={inputStyle} />
+              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Preço Venda (R$)</label>
+              <input type="number" min={0} step={0.01} value={form.preco_venda} onChange={(e) => setForm({ ...form, preco_venda: Number(e.target.value) })} className={inputClassName} />
             </div>
           </div>
 
           {formError && (
-            <div style={{ background: '#FEF2F2', color: '#DC2626', border: '1px solid #FECACA', borderRadius: 10, padding: '10px 12px', fontSize: 13 }}>
+            <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm font-medium">
               {formError}
             </div>
           )}
 
-          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', paddingTop: 4 }}>
-            <button onClick={() => setModalOpen(false)} className="btn-ghost">Cancelar</button>
-            <button onClick={handleSave} disabled={saving} className="btn-primary" style={{ opacity: saving ? 0.7 : 1 }}>
-              {saving ? 'Salvando...' : 'Salvar Aparelho'}
+          <div className="flex justify-end gap-3 pt-6 border-t border-white/5">
+            <button onClick={() => setModalOpen(false)} className="btn-ghost px-6">Cancelar</button>
+            <button onClick={handleSave} disabled={saving} className={`btn-primary px-8 ${saving ? 'opacity-50 cursor-not-allowed' : ''}`}>
+              {saving ? 'Registrando...' : 'Finalizar Registro'}
             </button>
           </div>
         </div>

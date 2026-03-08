@@ -20,40 +20,29 @@ export default function Pagination({ page, total, pageSize, onPage }: Pagination
     pages.push(totalPages)
   }
 
+  const baseBtnClass = "px-3 py-1.5 min-w-[36px] flex items-center justify-center rounded-lg text-sm font-bold border transition-all duration-300 focus:outline-none"
+
   return (
-    <div className="flex items-center justify-end gap-1 pt-4">
+    <div className="flex items-center justify-end gap-1.5 pt-4">
       <button
         onClick={() => onPage(page - 1)}
         disabled={page === 1}
-        style={{
-          padding: '5px 10px',
-          border: '1px solid #E2E8F0',
-          borderRadius: '4px',
-          fontSize: '13px',
-          background: '#fff',
-          color: page === 1 ? '#CBD5E1' : '#0F172A',
-          cursor: page === 1 ? 'not-allowed' : 'pointer',
-        }}
+        className={`${baseBtnClass} ${page === 1 ? 'opacity-30 cursor-not-allowed bg-white/5 border-white/5 text-zinc-500' : 'bg-white/5 border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white hover:border-white/20'}`}
       >
         ‹
       </button>
 
       {pages.map((p, i) =>
         p === '...' ? (
-          <span key={`ellipsis-${i}`} style={{ padding: '5px 4px', color: '#94A3B8', fontSize: '13px' }}>…</span>
+          <span key={`ellipsis-${i}`} className="px-2 text-zinc-500 text-sm font-bold">...</span>
         ) : (
           <button
             key={p}
             onClick={() => onPage(p as number)}
-            style={{
-              padding: '5px 10px',
-              border: '1px solid #E2E8F0',
-              borderRadius: '4px',
-              fontSize: '13px',
-              background: p === page ? '#0F172A' : '#fff',
-              color: p === page ? '#fff' : '#0F172A',
-              fontWeight: p === page ? 600 : 400,
-            }}
+            className={`${baseBtnClass} ${p === page
+                ? 'bg-teal-500/20 border-teal-500/50 text-teal-400 shadow-[0_0_10px_rgba(20,184,166,0.2)]'
+                : 'bg-transparent border-transparent text-zinc-400 hover:bg-white/5 hover:text-white'
+              }`}
           >
             {p}
           </button>
@@ -63,15 +52,7 @@ export default function Pagination({ page, total, pageSize, onPage }: Pagination
       <button
         onClick={() => onPage(page + 1)}
         disabled={page === totalPages}
-        style={{
-          padding: '5px 10px',
-          border: '1px solid #E2E8F0',
-          borderRadius: '4px',
-          fontSize: '13px',
-          background: '#fff',
-          color: page === totalPages ? '#CBD5E1' : '#0F172A',
-          cursor: page === totalPages ? 'not-allowed' : 'pointer',
-        }}
+        className={`${baseBtnClass} ${page === totalPages ? 'opacity-30 cursor-not-allowed bg-white/5 border-white/5 text-zinc-500' : 'bg-white/5 border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white hover:border-white/20'}`}
       >
         ›
       </button>

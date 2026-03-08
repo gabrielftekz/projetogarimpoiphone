@@ -3,12 +3,13 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { formatCurrency, daysSince } from '../lib/utils'
 import Icon from '../components/ui/Icon'
+import KpiCard from '../components/ui/KpiCard'
 import type { OrdemServico, Aparelho } from '../types'
 
 const AVATAR_COLORS = [
-  { cor: '#BFDBFE', text: '#1D4ED8' },
-  { cor: '#FBCFE8', text: '#9D174D' },
-  { cor: '#BBF7D0', text: '#166534' },
+  { cor: 'rgba(56, 189, 248, 0.2)', text: '#38bdf8', border: 'rgba(56, 189, 248, 0.5)' },
+  { cor: 'rgba(168, 85, 247, 0.2)', text: '#a855f7', border: 'rgba(168, 85, 247, 0.5)' },
+  { cor: 'rgba(52, 211, 153, 0.2)', text: '#34d399', border: 'rgba(52, 211, 153, 0.5)' },
 ]
 
 interface VendedorRanking {
@@ -111,81 +112,103 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 256 }}>
-        <div style={{ width: 32, height: 32, border: '3px solid #EEF3E5', borderTopColor: '#5D6D3E', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+      <div className="flex items-center justify-center h-64">
+        <div className="w-10 h-10 border-4 border-white/10 border-t-teal-400 rounded-full animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="fade" style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+    <div className="fade flex flex-col gap-6">
 
-      {/* Hero */}
-      <div className="card" style={{ padding: '32px 36px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 20, marginBottom: 28 }}>
+      {/* Hero Section */}
+      <div className="glass-panel p-8 md:p-10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-teal-500/10 to-purple-500/10 rounded-full blur-[100px] -z-10 pointer-events-none transform translate-x-1/2 -translate-y-1/2" />
+
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-8">
           <div>
-            <h1 style={{ fontSize: 32, fontWeight: 700, color: '#2D2926', letterSpacing: '-0.5px' }}>{greeting}{firstName ? `, ${firstName}!` : '!'} ☀️</h1>
-            <p style={{ fontSize: 16, color: '#9A948E', marginTop: 6 }}>Aqui está o resumo da saúde da sua loja hoje.</p>
+            <h1 className="text-4xl font-extrabold text-white tracking-tight flex items-center gap-3">
+              {greeting}{firstName ? `, ${firstName}` : ''}
+              <span className="text-teal-400">✨</span>
+            </h1>
+            <p className="text-zinc-400 mt-2 text-lg">Platform status is optimal. Here is your overview.</p>
           </div>
           {isAdmin && (
-            <div style={{ display: 'flex', gap: 12 }}>
-              <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 18, padding: '16px 24px', textAlign: 'center', minWidth: 140 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: '#16A34A', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>Lucro do Mês</div>
-                <div style={{ fontSize: 24, fontWeight: 700, color: '#15803D', letterSpacing: '-0.5px' }}>{formatCurrency(stats.lucroMes)}</div>
+            <div className="flex gap-4 w-full md:w-auto">
+              <div className="flex-1 md:flex-none glass-panel px-6 py-4 border-teal-500/30 bg-teal-500/5 relative overflow-hidden">
+                <div className="absolute -left-2 -top-2 w-12 h-12 bg-teal-500/20 blur-xl rounded-full" />
+                <div className="text-[10px] font-bold text-teal-400 uppercase tracking-[0.15em] mb-1 relative z-10">Lucro do Mês</div>
+                <div className="text-2xl font-black text-white tracking-tight relative z-10">{formatCurrency(stats.lucroMes)}</div>
               </div>
-              <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 18, padding: '16px 24px', textAlign: 'center', minWidth: 140 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: '#2563EB', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>Vendas Hoje</div>
-                <div style={{ fontSize: 24, fontWeight: 700, color: '#1D4ED8', letterSpacing: '-0.5px' }}>{stats.vendasHoje}</div>
+              <div className="flex-1 md:flex-none glass-panel px-6 py-4 border-indigo-500/30 bg-indigo-500/5 relative overflow-hidden">
+                <div className="absolute -left-2 -top-2 w-12 h-12 bg-indigo-500/20 blur-xl rounded-full" />
+                <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.15em] mb-1 relative z-10">Vendas Hoje</div>
+                <div className="text-2xl font-black text-white tracking-tight relative z-10">{stats.vendasHoje}</div>
               </div>
             </div>
           )}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { icon: 'check_circle', bg: '#F0FDF4', border: '#BBF7D0', iconColor: '#16A34A', title: 'Tudo em dia', sub: 'Backups realizados' },
-            { icon: 'inventory_2', bg: '#FFF7ED', border: '#FED7AA', iconColor: '#EA580C', title: 'Atenção ao estoque', sub: `${stats.alertasBateria.length} itens com bateria baixa` },
-            { icon: 'build', bg: '#EFF6FF', border: '#BFDBFE', iconColor: '#2563EB', title: 'Reparos Ativos', sub: `${stats.osEmAberto} celulares na bancada` },
+            { icon: 'check_circle', border: 'border-emerald-500/20', bg: 'bg-emerald-500/5', color: '#10b981', title: 'Tudo em dia', sub: 'Backups realizados' },
+            { icon: 'inventory_2', border: 'border-amber-500/20', bg: 'bg-amber-500/5', color: '#f59e0b', title: 'Atenção ao estoque', sub: `${stats.alertasBateria.length} itens com bateria baixa` },
+            { icon: 'build', border: 'border-blue-500/20', bg: 'bg-blue-500/5', color: '#3b82f6', title: 'Reparos Ativos', sub: `${stats.osEmAberto} celulares na bancada` },
           ].map((s, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, background: s.bg, border: `1px solid ${s.border}`, borderRadius: 18, padding: '16px 18px', cursor: 'pointer' }}>
-              <div style={{ width: 38, height: 38, background: '#fff', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 1px 3px rgba(0,0,0,.08)', flexShrink: 0 }}>
-                <Icon name={s.icon} size={18} style={{ color: s.iconColor }} />
+            <div key={i} className={`flex items-center gap-4 rounded-2xl border ${s.border} ${s.bg} p-5 transition-all hover:bg-white/5`}>
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                style={{ background: `color-mix(in srgb, ${s.color} 15%, transparent)`, color: s.color, boxShadow: `0 0 15px color-mix(in srgb, ${s.color} 20%, transparent)` }}
+              >
+                <Icon name={s.icon} size={20} />
               </div>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#2D2926' }}>{s.title}</div>
-                <div style={{ fontSize: 11, color: '#9A948E', marginTop: 2 }}>{s.sub}</div>
+                <div className="text-sm font-bold text-zinc-100">{s.title}</div>
+                <div className="text-xs text-zinc-400 mt-0.5">{s.sub}</div>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Bottom grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        {/* O que fazer agora */}
-        <div>
-          <h3 style={{ fontSize: 18, fontWeight: 700, color: '#4A443F', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Icon name="task_alt" size={20} style={{ color: '#5D6D3E' }} /> O que fazer agora?
+        {/* Action Center */}
+        <div className="flex flex-col gap-4">
+          <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-2">
+            <Icon name="bolt" size={20} className="text-amber-400" /> Action Center
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div className="flex flex-col gap-3">
             {[
-              { badge: 'Urgente', badgeBg: '#FEF3C7', badgeText: '#92400E', title: 'Pagar Comissões Pendentes', desc: 'Vendedores aguardam o fechamento do mês.', showAvatars: true },
-              { badge: 'Reposição', badgeBg: '#DBEAFE', badgeText: '#1E40AF', title: 'Repor Peças de iPhone 13', desc: 'O estoque de telas está crítico (apenas 2 unidades).' },
-              { badge: 'Relatório', badgeBg: '#D1FAE5', badgeText: '#065F46', title: 'Verificar Desempenho', desc: 'Sua margem líquida cresceu 12% esta semana!' },
+              { badge: 'Urgente', badgeCol: '#fb923c', title: 'Pagar Comissões Pendentes', desc: 'Vendedores aguardam o fechamento do mês.', showAvatars: true },
+              { badge: 'Reposição', badgeCol: '#3b82f6', title: 'Repor Peças de iPhone 13', desc: 'O estoque de telas está crítico (apenas 2 unidades).' },
+              { badge: 'Relatório', badgeCol: '#10b981', title: 'Verificar Desempenho', desc: 'Sua margem líquida cresceu 12% esta semana!' },
             ].map((item, i) => (
-              <div key={i} className="action-card" style={{ padding: '20px 22px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div key={i} className="action-card group relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 blur-[50px] opacity-0 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none" style={{ background: item.badgeCol }} />
+
+                <div className="flex justify-between items-start relative z-10">
                   <div>
-                    <span style={{ background: item.badgeBg, color: item.badgeText, padding: '2px 10px', borderRadius: 20, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 }}>{item.badge}</span>
-                    <h4 style={{ fontSize: 15, fontWeight: 700, color: '#2D2926', margin: '8px 0 4px' }}>{item.title}</h4>
-                    <p style={{ fontSize: 13, color: '#9A948E' }}>{item.desc}</p>
+                    <span
+                      className="px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-widest border"
+                      style={{ color: item.badgeCol, borderColor: `color-mix(in srgb, ${item.badgeCol} 30%, transparent)`, background: `color-mix(in srgb, ${item.badgeCol} 10%, transparent)` }}
+                    >
+                      {item.badge}
+                    </span>
+                    <h4 className="text-base font-bold text-white mt-3 mb-1">{item.title}</h4>
+                    <p className="text-sm text-zinc-400">{item.desc}</p>
+
                     {item.showAvatars && stats.vendedores.length > 0 && (
-                      <div style={{ display: 'flex', marginTop: 12 }}>
+                      <div className="flex mt-4 items-center">
                         {stats.vendedores.map((v, j) => {
                           const av = AVATAR_COLORS[j % AVATAR_COLORS.length]
                           return (
-                            <div key={j} style={{ width: 28, height: 28, borderRadius: '50%', background: av.cor, border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 700, color: av.text, marginLeft: j > 0 ? -8 : 0, zIndex: 3 - j }}>
+                            <div
+                              key={j}
+                              className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-[#121214] -ml-2 first:ml-0"
+                              style={{ background: av.cor, color: av.text, borderColor: '#0a0a0a' }}
+                            >
                               {v.nome.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
                             </div>
                           )
@@ -193,83 +216,84 @@ export default function DashboardPage() {
                       </div>
                     )}
                   </div>
-                  <Icon name="arrow_forward" size={20} style={{ color: '#D4CEC8', flexShrink: 0 }} />
+                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-zinc-500 group-hover:text-white group-hover:bg-white/10 transition-colors">
+                    <Icon name="arrow_forward" size={16} />
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Destaques da equipe */}
-        <div>
-          <h3 style={{ fontSize: 18, fontWeight: 700, color: '#4A443F', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Icon name="stars" size={20} style={{ color: '#F59E0B' }} /> Destaques da Equipe
+        {/* Intelligence / Analytics Column */}
+        <div className="flex flex-col gap-4">
+          <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-2">
+            <Icon name="insights" size={20} className="text-purple-400" /> Intelligence
           </h3>
 
-          <div className="card" style={{ marginBottom: 12, overflow: 'hidden' }}>
-            <div style={{ padding: '20px 22px', borderBottom: '1px solid #F5F0EA' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#B5AFA9', textTransform: 'uppercase', letterSpacing: 0.8 }}>Vendedores do Mês</span>
+          <div className="glass-panel overflow-hidden">
+            <div className="p-5 border-b border-white/5">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Top Performers</span>
               </div>
+
               {stats.vendedores.length === 0 ? (
-                <p style={{ fontSize: 13, color: '#B5AFA9', textAlign: 'center', padding: '12px 0' }}>Nenhum dado de vendas ainda</p>
+                <p className="text-sm text-zinc-500 text-center py-4">Aguardando dados...</p>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  {stats.vendedores.map((v, i) => {
-                    return (
-                      <div key={v.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div style={{ width: 38, height: 38, borderRadius: '50%', background: i === 0 ? '#EFF6FF' : '#F9FAFB', border: `1px solid ${i === 0 ? '#BFDBFE' : '#E5E7EB'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: i === 0 ? '#1D4ED8' : '#6B7280' }}>{i + 1}º</div>
-                          <div>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: '#2D2926' }}>{v.nome}</div>
-                            <div style={{ fontSize: 11, color: '#B5AFA9' }}>{v.numVendas} vendas</div>
-                          </div>
+                <div className="flex flex-col gap-4">
+                  {stats.vendedores.map((v, i) => (
+                    <div key={v.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
+                      <div className="flex items-center gap-4">
+                        <div
+                          className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border
+                            ${i === 0 ? 'bg-purple-500/10 border-purple-500/30 text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.2)]' : 'bg-white/5 border-white/10 text-zinc-400'}`}
+                        >
+                          {i + 1}
                         </div>
-                        <div style={{ textAlign: 'right' }}>
-                          <div style={{ fontSize: 13, fontWeight: 700, color: '#2D2926' }}>{formatCurrency(v.totalVendas)}</div>
-                          <div style={{ fontSize: 10, fontWeight: 700, color: i === 0 ? '#16A34A' : '#9CA3AF' }}>faturamento</div>
+                        <div>
+                          <div className="text-sm font-bold text-white">{v.nome}</div>
+                          <div className="text-xs text-zinc-400 mt-0.5">{v.numVendas} deals closed</div>
                         </div>
                       </div>
-                    )
-                  })}
+                      <div className="text-right">
+                        <div className="text-sm font-black text-white tracking-wide">{formatCurrency(v.totalVendas)}</div>
+                        <div className={`text-[10px] font-bold uppercase tracking-wider mt-1 ${i === 0 ? 'text-teal-400' : 'text-zinc-500'}`}>
+                          Revenue
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
-            <div style={{ padding: '12px 16px', background: '#FAFAF8' }}>
-              <button className="btn-ghost" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                <Icon name="emoji_events" size={16} /> Ver Ranking Completo
-              </button>
+            <button className="w-full p-3 flex items-center justify-center gap-2 text-sm font-bold text-zinc-400 hover:text-white hover:bg-white/5 transition-colors">
+              <Icon name="open_in_new" size={16} /> View Full Analytics
+            </button>
+          </div>
+
+          {/* System Notifications */}
+          <div className="glass-panel p-5 relative overflow-hidden border-orange-500/10 bg-orange-500/5 mt-2">
+            <h4 className="text-sm font-bold text-orange-400 flex items-center gap-2 mb-4">
+              <Icon name="notifications_active" size={18} /> System Alerts
+            </h4>
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-3 items-start">
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+                <p className="text-sm text-zinc-300">Sincronização com filial Centro falhou às 10:42. <button className="text-red-400 font-bold hover:underline">Retry</button></p>
+              </div>
+              <div className="flex gap-3 items-start">
+                <div className="w-1.5 h-1.5 rounded-full bg-teal-500 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(20,184,166,0.8)]" />
+                <p className="text-sm text-zinc-400">Database backup automated task completed (09:15).</p>
+              </div>
+              {stats.osProntas.length > 0 && (
+                <div className="flex gap-3 items-start">
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
+                  <p className="text-sm text-zinc-300">{stats.osProntas.length} OS in terminal state awaiting client notification.</p>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Avisos */}
-          <div style={{ background: '#FDF6F0', border: '1px solid #F5E6DA', borderRadius: 18, padding: '16px 20px' }}>
-            <h4 style={{ fontSize: 13, fontWeight: 700, color: '#8C6D51', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
-              <Icon name="info" size={16} /> Avisos Importantes
-            </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#EF4444', marginTop: 4, flexShrink: 0 }} />
-                <p style={{ fontSize: 12, color: '#8C6D51' }}>Sincronização com filial Centro falhou às 10:42. <span style={{ fontWeight: 700, textDecoration: 'underline', cursor: 'pointer' }}>Tentar novamente</span></p>
-              </div>
-              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#22C55E', marginTop: 4, flexShrink: 0 }} />
-                <p style={{ fontSize: 12, color: '#8C6D51' }}>Backup concluído com sucesso às 09:15.</p>
-              </div>
-              {stats.osProntas.length > 0 && (
-                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                  <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#F59E0B', marginTop: 4, flexShrink: 0 }} />
-                  <p style={{ fontSize: 12, color: '#8C6D51' }}>{stats.osProntas.length} OS prontas aguardam aviso ao cliente.</p>
-                </div>
-              )}
-              {daysSince && stats.alertasBateria.filter(a => daysSince(a.data_entrada) > 15).length > 0 && (
-                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                  <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#F59E0B', marginTop: 4, flexShrink: 0 }} />
-                  <p style={{ fontSize: 12, color: '#8C6D51' }}>Aparelhos parados há +15 dias no estoque.</p>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       </div>
     </div>

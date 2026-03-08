@@ -22,53 +22,23 @@ export default function Modal({ open, onClose, title, children, width = '520px' 
   if (!open) return null
 
   return (
-    <div
-      style={{
-        position: 'fixed', inset: 0, zIndex: 50,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: 16, background: 'rgba(15,23,42,0.45)',
-      }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all" onClick={(e) => { if (e.target === e.currentTarget) onClose() }}>
       <div
-        style={{
-          width: '100%',
-          maxWidth: width,
-          maxHeight: '90vh',
-          borderRadius: 20,
-          border: '1px solid #EDE8E0',
-          boxShadow: '0 24px 48px rgba(15,23,42,0.14)',
-          background: '#fff',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
+        className="w-full relative flex flex-col bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-[0_24px_50px_rgba(0,0,0,0.8)] before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/[0.03] before:to-transparent before:rounded-2xl before:pointer-events-none"
+        style={{ maxWidth: width, maxHeight: '90vh' }}
       >
-        <div
-          style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '20px 24px', borderBottom: '1px solid #F0EBE3',
-          }}
-        >
-          <h2 style={{
-            margin: 0, fontSize: 18, fontWeight: 700,
-            fontFamily: 'Quicksand, sans-serif', color: '#4A443F',
-          }}>
+        <div className="flex items-center justify-between p-6 border-b border-white/5">
+          <h2 className="m-0 text-lg font-bold text-white tracking-wide">
             {title}
           </h2>
           <button
             onClick={onClose}
-            style={{
-              background: '#F5F0EA', border: 'none', color: '#9A948E',
-              padding: 6, borderRadius: 8, cursor: 'pointer', display: 'flex',
-              alignItems: 'center', justifyContent: 'center', transition: 'background 0.15s',
-            }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = '#EDE8E0' }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = '#F5F0EA' }}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
           >
             <Icon name="close" size={18} />
           </button>
         </div>
-        <div style={{ flex: 1, overflowY: 'auto', padding: '24px', scrollbarWidth: 'thin' }}>
+        <div className="flex-1 overflow-y-auto p-6 scrollbar-thin">
           {children}
         </div>
       </div>

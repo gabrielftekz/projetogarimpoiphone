@@ -35,14 +35,11 @@ export default function KanbanColumn({ title, dotColor, status, orders, onEdit, 
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minWidth: 0, flex: 1 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, paddingBottom: 4 }}>
-        <div style={{ width: 10, height: 10, borderRadius: '50%', background: dotColor, flexShrink: 0 }} />
-        <span style={{ fontWeight: 800, fontSize: 15, color: '#4A443F' }}>{title}</span>
-        <span style={{
-          background: '#F0EBE3', color: '#9A948E', fontSize: 11, fontWeight: 700,
-          borderRadius: 20, padding: '2px 8px', marginLeft: 2,
-        }}>
+    <div className="flex flex-col gap-4 min-w-0 flex-1">
+      <div className="flex items-center gap-3 pb-1 border-b border-white/5">
+        <div className="w-2 h-2 rounded-full shadow-[0_0_8px_currentColor]" style={{ background: dotColor, color: dotColor }} />
+        <span className="font-bold text-sm text-white uppercase tracking-wider">{title}</span>
+        <span className="ml-auto bg-white/10 text-white text-[10px] font-bold rounded-full px-2 py-0.5 border border-white/10">
           {count}
         </span>
       </div>
@@ -51,25 +48,16 @@ export default function KanbanColumn({ title, dotColor, status, orders, onEdit, 
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        style={{
-          background: dragOver ? '#EEF3E5' : '#F5F1EB',
-          borderRadius: 14,
-          padding: '12px 10px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 10,
-          minHeight: 200,
-          border: dragOver ? '2px dashed #5D6D3E' : '2px solid transparent',
-          transition: 'background 0.15s, border-color 0.15s',
-        }}
+        className={`flex flex-col gap-4 min-h-[250px] rounded-2xl p-3 transition-colors duration-300 border-2 ${dragOver ? 'border-teal-500/50 bg-teal-500/5' : 'border-dashed border-white/10 bg-white/[0.01]'
+          }`}
       >
         {loading ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 120 }}>
-            <div style={{ width: 22, height: 22, border: '3px solid #EEF3E5', borderTopColor: '#5D6D3E', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+          <div className="flex items-center justify-center h-32">
+            <div className={`w-6 h-6 border-2 border-white/10 border-t-current rounded-full animate-spin`} style={{ color: dotColor }} />
           </div>
         ) : orders.length === 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '32px 0', color: '#C0BAB2' }}>
-            <span style={{ fontSize: 13 }}>{dragOver ? 'Soltar aqui' : 'Nenhuma OS aqui'}</span>
+          <div className="flex flex-col items-center justify-center gap-2 py-10 text-zinc-500">
+            <span className="text-xs font-medium tracking-wide">{dragOver ? 'Soltar OS aqui' : 'Vazio'}</span>
           </div>
         ) : (
           orders.map((os) => (
