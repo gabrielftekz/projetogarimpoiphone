@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { formatCurrency, formatDate, daysSince } from '../lib/utils'
+import { formatCurrency, daysSince } from '../lib/utils'
 import Icon from '../components/ui/Icon'
 import type { Aparelho } from '../types'
 

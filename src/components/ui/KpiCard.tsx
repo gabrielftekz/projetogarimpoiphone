@@ -15,11 +15,6 @@ export default function KpiCard({
   icon,
   sub,
 }: KpiCardProps) {
-  // Use hex conversion for rgba glows
-  const getGlow = (color: string) => {
-    return `0 0 20px ${color}30, 0 0 0 1px ${color}40 inset`
-  }
-
   return (
     <div
       className="glass-panel p-6 flex flex-col justify-between relative overflow-hidden group"

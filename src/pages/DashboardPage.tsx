@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
-import { formatCurrency, daysSince } from '../lib/utils'
+import { formatCurrency } from '../lib/utils'
 import Icon from '../components/ui/Icon'
-import KpiCard from '../components/ui/KpiCard'
 import type { OrdemServico, Aparelho } from '../types'
 
 const AVATAR_COLORS = [
